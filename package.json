@@ -1,0 +1,27 @@
+{
+  "name": "cyspy",
+  "version": "1.0.0",
+  "description": "Cyberhunt bot for Discord",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akrouk/CySpy.git"
+  },
+  "author": "akrouk",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/akrouk/CySpy/issues"
+  },
+  "homepage": "https://github.com/akrouk/CySpy#readme",
+  "dependencies": {
+    "@discordjs/builders": "^0.9.0",
+    "@discordjs/rest": "^0.1.0-canary.0",
+    "discord-api-types": "^0.25.2",
+    "discord.js": "^13.3.1",
+    "sequelize": "^6.12.0-beta.3",
+    "sqlite3": "^5.0.2"
+  }
+}

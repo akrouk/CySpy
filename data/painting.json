@@ -1,0 +1,13 @@
+{
+    "channel": "name-that-painting",
+    "channelId": null,
+    "embed": "paintingEmbed",
+    "embedId": null,
+    "answers": [
+        "nighthawks"
+    ],
+    "points": 10,
+    "currPoints": 10,
+    "files": null,
+    "correct": []
+}

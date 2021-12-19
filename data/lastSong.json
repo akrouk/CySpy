@@ -1,0 +1,15 @@
+{
+    "channel": "last-song",
+    "channelId": "921172340056928306",
+    "embed": "lastSongEmbed",
+    "embedId": "921172340694470716",
+    "answers": [
+        "moho braccatus"
+    ],
+    "points": 50,
+    "currPoints": 50,
+    "files": [
+        "mating_call.mp3"
+    ],
+    "correct": []
+}

@@ -1,34 +1,46 @@
 const fs = require('fs');
 const path = require('path');
-const sqlite = require('sqlite3');
+const sqlite = require('sqlite3').verbose();
 
-module.exports = {
-    initdb() {
-        let db = new sqlite.Database('./csdata.db', sqlite.OPEN_READWRITE);
+const args = process.argv.slice(2);
+let db = new sqlite.Database('./csdata.db', sqlite.OPEN_READWRITE);
 
-        db.run(
-            `CREATE TABLE IF NOT EXISTS players (id TEXT NOT NULL UNIQUE, name TEXT NOT NULL, points INT NOT NULL DEFAULT 0);
-            CREATE TABLE IF NOT EXISTS embeds (embedName TEXT NOT NULL UNIQUE, jsonData TEXT NOT NULL)`, 
-            error => {
-                if (error) {
-                    console.error(error); 
-                }
-                db.close();
-            }
-        );
-    },
-    loadEmbedData() {
+console.log('Creating tables...');
+
+db.run('CREATE TABLE IF NOT EXISTS challenges (name TEXT NOT NULL UNIQUE, raw TEXT NOT NULL)', error => {
+    if (error) {
+        console.error; 
+    }
+});
+
+db.run('CREATE TABLE IF NOT EXISTS players (id TEXT NOT NULL UNIQUE, name TEXT NOT NULL, points INT NOT NULL DEFAULT 0)', error => {
+    if (error) {
+        console.error; 
+    }
+});
+
+console.log('Tables created successfully!');
+
+db.close();
+
+if (args.includes('-pch') || args.includes('--process-challenges')) {
+    setTimeout(() => {
         let db = new sqlite.Database('./csdata.db', sqlite.OPEN_READWRITE);
-        let embedData = db.prepare('INSERT INTO embeds VALUES(?, ?)');
-        
-        const dataFiles = fs.readdirSync('./data').filter(file => file.endsWith('.json'));
+        let statement = db.prepare('INSERT INTO challenges VALUES(?, ?)');
+
+        const dataFiles = fs.readdirSync('./chdata').filter(file => file.endsWith('.js'));
+
+        console.log('Processing raw challenge data...');
 
         for (const file of dataFiles) {
-            const obj = require(`./data/${file}`);
-            embedData.run(path.parse(file).name, JSON.stringify(obj));
+            const data = require(`./chdata/${file}`);
+            statement.run(path.parse(file).name, JSON.stringify(data.raw));
         }
 
-        embedData.finalize();
+        statement.finalize();
+
+        console.log('Challenge data processed successfully!');
+
         db.close();
-    }
+    }, 1000);
 }

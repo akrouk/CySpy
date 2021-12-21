@@ -1,6 +1,6 @@
 const fs = require('fs');
+const path = require('path');
 const { Client, Collection, Intents } = require('discord.js');
-const { initdb, loadEmbedData } = require('./init-db');
 const { token } = require('./config.json');
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
@@ -13,10 +13,16 @@ for (const file of commandFiles) {
 	client.commands.set(command.data.name, command);
 }
 
+client.embeds = new Collection();
+const chdataFiles = fs.readdirSync('./chdata').filter(file => file.endsWith('.js'));
+
+for (const file of chdataFiles) {
+    const chdata = require(`./chdata/${file}`);
+    client.embeds.set(path.parse(file).name, chdata.embed);
+}
+
 client.once('ready', () => {
 	console.log('CySpy is online!');
-    initdb();
-    loadEmbedData();
 });
 
 client.on('interactionCreate', async interaction => {

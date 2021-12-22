@@ -1,4 +1,4 @@
-const { get_chdata, update_chdata, close_db } = require('../func/db');
+const db = require('../func/db');
 const { Permissions } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 
@@ -15,7 +15,8 @@ module.exports = {
             return;
         }
 
-        const data = await get_chdata('painting');
+        db.open('csdata');
+        const data = await db.get_chdata('painting');
         const obj = JSON.parse(data[0].raw);
 
         let channel = await interaction.guild.channels.create(obj.channel, {
@@ -37,8 +38,8 @@ module.exports = {
         obj.channelId = channel.id;
         obj.embedId = sent.id; 
 
-        await update_chdata('painting', JSON.stringify(obj));
-        close_db();
+        await db.update_chdata('painting', JSON.stringify(obj));
+        db.close();
         await interaction.reply({ content: 'Success!', ephemeral: true });
 	}
 };

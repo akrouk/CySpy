@@ -16,8 +16,8 @@ module.exports = {
         }
 
         db.open('csdata');
-        const data = await db.get_chdata('painting');
-        const obj = JSON.parse(data[0].raw);
+        const painting = await db.get_chdata('painting');
+        const obj = JSON.parse(painting.raw);
 
         let channel = await interaction.guild.channels.create(obj.channel, {
             type: 'GUILD_TEXT',

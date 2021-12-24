@@ -1,3 +1,8 @@
+const db = require('../func/db');
+
+const data = db.get_chdata_sync({ file: 'csdata', name: 'painting' });
+const painting = JSON.parse(data.raw);
+
 module.exports = {
     raw: {
         "channel": "name-that-painting",
@@ -25,7 +30,7 @@ module.exports = {
             url: 'https://i.imgur.com/SKrVSGe.jpeg'
         },
         footer: {
-            text: `Current point value: 10\nSolves: 0`
+            text: `Current point value: ${painting.currPoints}\nSolves: ${painting.correct.length}`
         }
     }
 }

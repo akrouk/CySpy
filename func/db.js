@@ -1,4 +1,5 @@
 const sqlite = require('sqlite3').verbose();
+const sp = require('synchronized-promise');
 
 class SqlMisuse extends Error {
     constructor(message) {
@@ -9,14 +10,27 @@ class SqlMisuse extends Error {
 
 var db;
 
-async function get_chdata(name) {
-    checkOpen();
+async function get_chdata(args) {
+    let { file, name } = typeof args === 'string' ? { name: args } : args;
+    file ? open(file) : checkOpen();
     const sql = `
         SELECT raw
         FROM challenges
         WHERE name = ?;
     `;
-    return await db.query(sql, [name]);
+    const data = await db.query(sql, [name]);
+    return file ? (close(), data[0]) : data[0];
+}
+
+let get_chdata_sync = sp(get_chdata);
+
+async function all_chdata() {
+    checkOpen();
+    const sql = `
+        SELECT raw
+        FROM challenges;
+    `;
+    return await db.query(sql);
 }
 
 async function update_chdata(name, raw) {
@@ -55,9 +69,9 @@ function close() {
 }
 
 function checkOpen() {
-    if (db === undefined) {
+    if (!db) {
         throw new SqlMisuse('Database is not open.');
     }
 }
 
-module.exports = { get_chdata, update_chdata, open, close }
+module.exports = { get_chdata, get_chdata_sync, all_chdata, update_chdata, open, close }

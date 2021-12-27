@@ -1,7 +1,5 @@
 const db = require('../func/db');
-
-const data = db.get_chdata_sync({ file: 'csdata', name: 'painting' });
-const painting = JSON.parse(data.raw);
+const painting = db.get_chdata_sync({ file: 'csdata', name: 'painting' });
 
 module.exports = {
     raw: {
@@ -18,8 +16,11 @@ module.exports = {
     },
     embed: {
         color: 0xca5010,
-        title: 'Test Challenge: Name that Painting 🥋',
+        title: 'Test Challenge: Name that Painting',
         description: 'Provide the title of this artwork created by American painter Edward Hopper.',
+        thumbnail: {
+            url: 'https://i.imgur.com/vjYbHsX.png'
+        },
         fields: [
             {
                 name: 'Command:',

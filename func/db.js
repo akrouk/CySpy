@@ -19,7 +19,7 @@ async function get_chdata(args) {
         WHERE name = ?;
     `;
     const data = await db.query(sql, [name]);
-    return file ? (close(), data[0]) : data[0];
+    return file ? (close(), JSON.parse(data[0].raw)) : JSON.parse(data[0].raw);
 }
 
 let get_chdata_sync = sp(get_chdata);
@@ -31,6 +31,17 @@ async function all_chdata() {
         FROM challenges;
     `;
     return await db.query(sql);
+}
+
+async function all_players(args) {
+    let { file } = args;
+    file ? open(file) : checkOpen();
+    const sql = `
+        SELECT *
+        FROM players;
+    `;
+    const data = await db.query(sql);
+    return file ? (close(), data) : data;
 }
 
 async function update_chdata(name, raw) {
@@ -74,4 +85,4 @@ function checkOpen() {
     }
 }
 
-module.exports = { get_chdata, get_chdata_sync, all_chdata, update_chdata, open, close }
+module.exports = { get_chdata, get_chdata_sync, all_chdata, update_chdata, all_players, open, close }

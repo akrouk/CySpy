@@ -1,19 +1,8 @@
-const db = require('../func/db');
+const db = require('../db/libdb');
 const painting = db.get_chdata_sync({ file: 'csdata', name: 'painting' });
 
 module.exports = {
-    raw: {
-        "channel": "name-that-painting",
-        "channelId": null,
-        "embedId": null,
-        "answers": [
-            "nighthawks"
-        ],
-        "points": 10,
-        "currPoints": 10,
-        "files": null,
-        "correct": []
-    },
+    raw: require('./json/painting.json'),
     embed: {
         color: 0xca5010,
         title: 'Test Challenge: Name that Painting',

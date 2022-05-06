@@ -6,6 +6,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('configure')
 		.setDescription('Configures the text channel for the test challenge.')
+        .setDefaultPermission(false)
         .addSubcommand(subcommand =>
             subcommand.setName('test').setDescription('Configure the test challenge.').addStringOption(option => 
                 option.setName('category-id').setDescription('ID of category to create the channel in.').setRequired(true)

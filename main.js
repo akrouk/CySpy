@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const db = require('./db/libdb');
 const { Client, Collection, Intents } = require('discord.js');
 const { token } = require('./config.json');
 

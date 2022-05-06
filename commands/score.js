@@ -11,8 +11,9 @@ module.exports = {
 
         const scoreEmbed = new MessageEmbed()
             .setColor(interaction.member.displayHexColor)
-            .setAuthor(interaction.member.displayName)
-            .setThumbnail(interaction.member.user.avatarURL({ dynamic: true }))
+            .setAuthor(
+                { name: interaction.member.user.username, iconURL: interaction.member.user.avatarURL({ dynamic: true }) }
+            )
             .addFields(
                 { name: 'Points', value: '0', inline: true },
                 { name: 'Place', value: '1st', inline: true }

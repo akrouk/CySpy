@@ -1,29 +1,31 @@
-const fs = require('fs');
-const path = require('path');
-const db = require('./db/libdb');
+const read = require('fs-readdir-recursive');
+const { Sequelize } = require('sequelize');
 const { Client, Collection, Intents } = require('discord.js');
 const { token } = require('./config.json');
 
-const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+const client = new Client({ intents: [ 
+    Intents.FLAGS.GUILDS, 
+    Intents.FLAGS.GUILD_MESSAGES, 
+    Intents.FLAGS.GUILD_PRESENCES 
+] });
+
+client.sequelize = new Sequelize('database', 'user', null, {
+    host: 'localhost',
+    dialect: 'sqlite',
+    logging: false,
+    storage: './data/cyspy.sqlite'
+});
 
 client.commands = new Collection();
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+const commandFiles = read('./commands').filter(file => file.endsWith('.c.js'));
 
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
 	client.commands.set(command.data.name, command);
 }
 
-client.embeds = new Collection();
-const chdataFiles = fs.readdirSync('./chdata').filter(file => file.endsWith('.js'));
-
-for (const file of chdataFiles) {
-    const chdata = require(`./chdata/${file}`);
-    client.embeds.set(path.parse(file).name, chdata.embed);
-}
-
 client.once('ready', () => {
-	console.log('CySpy is online!');
+    console.log('CySpy is online!');
 });
 
 client.on('interactionCreate', async interaction => {
@@ -33,10 +35,10 @@ client.on('interactionCreate', async interaction => {
 
 	if (!command) return;
 
-	try {
+    try {
 		await command.execute(interaction);
-	} catch (err) {
-		console.error(err, err.stack);
+	} catch (error) {
+		console.error(error);
 		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
 	}
 });
